@@ -3,7 +3,7 @@ from .models import Artist
 
 
 class ArtistAdmin(admin.ModelAdmin):
-    list_display = ('stage name', 'email address')
+    list_display = ('stage_name', 'social_link')
 
 
 # Register your models here.
