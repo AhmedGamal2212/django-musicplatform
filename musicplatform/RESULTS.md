@@ -87,16 +87,29 @@
 
 ---
 
-### get all albums released today or before today but not after today
-
+### get all albums release before today 
 ```python
-    Album.objects.all().filter(release_date__day=timezone.now().day)
+    x = Album.objects.filter(release_date__day__lt=timezone.datetime.now().day)
 ```
 
 ### result
 
 ```commandline
-    <QuerySet [<Album: New Album>, <Album: New Album 2>, <Album: anything>, <Album: created through shell>, <Album: created through shell again>]>
+    <QuerySet [<Album: New Album>, <Album: New Album 2>, <Album: anything>, <Album: created through shell>, <Album: created through shell again>]>    
+```
+
+---
+
+### get all albums released today or before today but not after today
+
+```python
+    Album.objects.all().filter(release_date__day__lte=timezone.now().day)
+```
+
+### result
+
+```commandline
+    <QuerySet [<Album: New Album>, <Album: New Album 2>, <Album: anything>, <Album: created through shell>, <Album: created through shell again>, <Album: released today>]>
 ```
 
 
@@ -151,4 +164,17 @@
 ```commandline
     <QuerySet [{'id': 1, 'artist_id': 4, 'name': 'New Album', 'creation_date': datetime.datetime(2022, 10, 14, 20, 55, 41, tzinfo=datetime.timezone.utc), 'release_date': datetime.datetime(2022, 10, 14, 20, 55, 44, tzinfo=datetime.timezone.utc), 'cost': 90.9}, {'id': 2, 'artist_id': 4, 'name': 'New Album 2', 'creation_date': datetime.datetime(2022, 10, 14, 20, 56, 10, tzinfo=datetime.timezone.utc), 'release_date': datetime.datetime(2022, 10, 14, 20, 56, 13, tzinfo=datetime.timezone.utc), 'cost': 30.0}, {'id': 4, 'artist_id': 4, 'name': 'created through shell', 'creation_date': datetime.datetime(2022, 10, 14, 21, 9, 42, 276176, tzinfo=datetime.timezone.utc), 'release_date': datetime.datetime(2022, 10, 14, 21, 8, 51, 311115, tzinfo=datetime.timezone.utc), 'cost': 90.0}, {'id': 5, 'artist_id': 4, 'name': 'created through shell again', 'creation_date': datetime.datetime(2022, 10, 14, 21, 14, 1, 807808, tzinfo=datetime.timezone.utc), 'release_date': datetime.datetime(2022, 10, 14, 21, 14, 1, 807660, tzinfo=datetime.timezone.utc), 'cost': 290.0}]>
     <QuerySet [{'id': 3, 'artist_id': 3, 'name': 'anything', 'creation_date': datetime.datetime(2022, 10, 14, 20, 56, 39, tzinfo=datetime.timezone.utc), 'release_date': datetime.datetime(2022, 10, 14, 20, 56, 41, tzinfo=datetime.timezone.utc), 'cost': 10000.0}]>
+```
+---
+
+### list down all albums ordered by cost then by name (cost has the higher priority)
+
+```python
+    Album.objects.order_by('cost', 'name')
+```
+
+### result
+
+```commandline
+    <QuerySet [<Album: New Album 2>, <Album: created through shell>, <Album: New Album>, <Album: released today>, <Album: created through shell again>, <Album: anything>]>
 ```
