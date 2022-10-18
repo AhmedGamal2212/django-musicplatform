@@ -9,8 +9,11 @@ class AlbumInline(admin.TabularInline):
 
 
 class ArtistAdmin(admin.ModelAdmin):
-    list_display = ('stage_name', 'social_link')
+    list_display = ('stage_name', 'social_link', 'approved_albums')
     inlines = [AlbumInline]
+
+    def approved_albums(self, model: Artist) -> int:
+        return model.album_set.filter(is_approved=True).count()
 
 
 # Register your models here.
