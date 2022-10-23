@@ -9,13 +9,15 @@
 
 {# Display a form #}
 {% block body %}
-  <form method="post" class="form">
-    {% csrf_token %}
-    {% bootstrap_form form %}
-    {% buttons %}
-      <button type="submit" class="btn btn-primary">
-        Submit
-      </button>
-    {% endbuttons %}
-  </form>
+  <div class="container-fluid">
+    <form method="post" class="form mt-4 px-4">
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      {% buttons %}
+        <button type="submit" class="btn btn-primary w-100">
+          Submit
+        </button>
+      {% endbuttons %}
+    </form>
+  </div>
 {% endblock body %}
