@@ -1,0 +1,61 @@
+{% load bootstrap5 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div class="container-fluid px-4">
+        {% for artist in artist_list %}
+            <dl class="mt-4">
+                <dt>
+                    id: {{ forloop.counter }}
+                </dt>
+                <dd>
+                    <ul>
+                        <li>
+                            Stage name: {{ artist.stage_name }}
+                        </li>
+                        <li>
+                            Social: <a href="{{artist.social_link}}">Link</a>
+                        </li>
+                        <li>
+                            Albums:
+
+                            {% for album in artist.album_set.all %}
+                                <ul>
+                                    <li>
+                                        id: {{ forloop.counter }}
+                                    </li>
+                                    <li>
+                                        Name: {{ album.name }}
+                                    </li>
+                                    <li>Creation Time: {{ album.created }} </li>
+                                    <li>Release datetime: {{ album.release_date }}</li>
+                                    <li>Cost: {{ album.cost }}</li>
+                                </ul>
+                                {% if forloop.counter != artist.album_set.all.count %}
+                                    <hr>
+                                {% endif %}
+                            {% empty %}
+                                <p class="ml-4">There's no albums to show</p>
+                            {% endfor %}
+                        </li>
+                    </ul>
+                </dd>
+            </dl>
+        <hr>
+        {% empty %}
+            <h1 class="text-center">There's no artists to display</h1>
+        {% endfor %}
+    </div>
+</body>
+</html>

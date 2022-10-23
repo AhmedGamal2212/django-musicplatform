@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from .forms import ArtistForm
+from .models import Artist
 
 
-# Create your views here.
 def index(request):
-    return HttpResponse('Artists')
+    return render(request, 'index.html', {'artist_list': Artist.objects.all()})
 
 
 def album_form(request):
