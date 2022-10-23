@@ -4,7 +4,7 @@ from .forms import AlbumForm
 
 
 class AlbumAdmin(admin.ModelAdmin):
-    list_display = ('name', 'artist', 'creation_date', 'release_date', 'is_approved')
+    list_display = ('name', 'artist', 'created', 'release_date', 'cost', 'is_approved')
     form = AlbumForm
 
 
