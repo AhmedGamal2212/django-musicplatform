@@ -1,11 +1,15 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
+from django.views.generic import ListView
+
 from .forms import AlbumForm
+from artists.models import Artist
 
 
 # Create your views here.
-def index(request):
-    return HttpResponse('Albums')
+class AlbumList(ListView):
+    model = Artist
+    template_name = 'albums/album_list.html'
 
 
 def album_form(request):

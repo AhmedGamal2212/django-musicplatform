@@ -1,0 +1,53 @@
+{% load bootstrap5 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>albums</title>
+</head>
+<body>
+<div class="container-fluid px-4">
+    <h1 class="text-center">Album List</h1>
+    {% for artist in artist_list %}
+        {% if artist.album_set.all %}
+            <dl class="mt-4">
+                <dt>
+                    Artist: {{ artist.stage_name.title }}
+                </dt>
+                <dd>
+                    {% for album in artist.album_set.all %}
+                        <ul>
+                            <li>
+                                id: {{ forloop.counter }}
+                            </li>
+                            <li>
+                                Name: {{ album.name }}
+                            </li>
+                            <li>Creation Time: {{ album.created }} </li>
+                            <li>Release datetime: {{ album.release_date }}</li>
+                            <li>Cost: {{ album.cost }}</li>
+                        </ul>
+                        {% if forloop.counter != artist.album_set.all.count %}
+                            <hr>
+                        {% endif %}
+                    {% empty %}
+                        {{ continue }}
+                    {% endfor %}
+                </dd>
+            </dl>
+            <hr>
+        {% endif %}
+    {% empty %}
+        <h1 class="text-center">There's no artists to display</h1>
+    {% endfor %}
+</div>
+</body>
+</html>

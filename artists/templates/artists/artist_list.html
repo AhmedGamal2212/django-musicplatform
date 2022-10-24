@@ -13,6 +13,7 @@
     <title>Title</title>
 </head>
 <body>
+    <h1 class="text-center">Artist List</h1>
     <div class="container-fluid px-4">
         {% for artist in artist_list %}
             <dl class="mt-4">
@@ -22,7 +23,7 @@
                 <dd>
                     <ul>
                         <li>
-                            Stage name: {{ artist.stage_name }}
+                            Stage name: <span class="fw-bold">{{ artist.stage_name.title }}</span>
                         </li>
                         <li>
                             Social: <a href="{{artist.social_link}}">Link</a>
