@@ -1,0 +1,19 @@
+{% load bootstrap5 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{# Display a form #}
+<div class="container-fluid border border-primary w-75 mt-4 p-4">
+    {% if form %}
+        {% bootstrap_form form %}
+    {% endif %}
+    {% block content %}
+
+    {% endblock content %}
+</div>
+
