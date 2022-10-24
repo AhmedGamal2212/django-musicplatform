@@ -1,20 +1,18 @@
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.views.generic import ListView, FormView
+
 from .forms import ArtistForm
 from .models import Artist
 
 
-def index(request):
-    return render(request, 'index.html', {'artist_list': Artist.objects.all()})
+class ArtistList(ListView):
+    model = Artist
 
 
-def album_form(request):
-    if request.method == 'POST':
-        form = ArtistForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/artists/')
-    else:
-        form = ArtistForm()
+class ArtistFormView(FormView):
+    success_url = '/artists/'
+    form_class = ArtistForm
+    template_name = 'artists/artist_form.html'
 
-    return render(request, 'artist_form.html', {'form': form})
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
