@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from django.views.generic import ListView
+from django.views.generic import ListView, FormView
 
 from .forms import AlbumForm
 from artists.models import Artist
@@ -12,13 +12,11 @@ class AlbumList(ListView):
     template_name = 'albums/album_list.html'
 
 
-def album_form(request):
-    if request.method == 'POST':
-        form = AlbumForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/albums/')
-    else:
-        form = AlbumForm()
+class AlbumFormView(FormView):
+    form_class = AlbumForm
+    success_url = '/albums/'
+    template_name = 'albums/album_form.html'
 
-    return render(request, 'album_form.html', {'form': form})
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)

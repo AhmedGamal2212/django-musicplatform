@@ -3,5 +3,5 @@ from . import views
 
 urlpatterns = [
     path('', views.AlbumList.as_view()),
-    path('create/', views.album_form)
+    path('create/', views.AlbumFormView.as_view())
 ]
