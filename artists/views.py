@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, FormView
 
 from .forms import ArtistForm
@@ -8,7 +9,7 @@ class ArtistList(ListView):
     model = Artist
 
 
-class ArtistFormView(FormView):
+class ArtistFormView(LoginRequiredMixin, FormView):
     success_url = '/artists/'
     form_class = ArtistForm
     template_name = 'artists/artist_form.html'

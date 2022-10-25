@@ -1,4 +1,12 @@
 {% extends "base_generic.html" %}
+{% load bootstrap5 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
 {% block content %}
 
   {% if form.errors %}
@@ -16,11 +24,12 @@
 
   <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
-    <input class="btn btn-primary w-100 fw-bold" type="submit" value="login">
+    {% bootstrap_form form %}
+    <input class="btn btn-primary d-block m-4 btn-lg mx-auto" type="submit" value="login">
     <input type="hidden" name="next" value="{{ next }}">
   </form>
 
   {# Assumes you setup the password_reset view in your URLconf #}
-  <p class="p-4"><a href="{% url 'password_reset' %}">Lost password?</a></p>
+  <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
 
 {% endblock %}
