@@ -1,19 +1,8 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, FormView
-
-from .forms import ArtistForm
+from rest_framework import generics
 from .models import Artist
+from .serializers import ArtistSerializer
 
 
-class ArtistList(ListView):
-    model = Artist
-
-
-class ArtistFormView(LoginRequiredMixin, FormView):
-    success_url = '/artists/'
-    form_class = ArtistForm
-    template_name = 'artists/artist_form.html'
-
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
+class ArtistAPIView(generics.ListCreateAPIView):
+    serializer_class = ArtistSerializer
+    queryset = Artist.objects.all()

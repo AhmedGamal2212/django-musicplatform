@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'artists.apps.ArtistsConfig',
     'albums.apps.AlbumsConfig',
     'bootstrap5',
-    'imagekit'
+    'imagekit',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
