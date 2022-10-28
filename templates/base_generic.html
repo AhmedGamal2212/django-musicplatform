@@ -10,6 +10,9 @@
 {# Display a form #}
 <div class="container-fluid border border-primary w-75 mt-4 p-4">
     {% block content %}
+        {% if form %}
+            {% bootstrap_form form %}
+        {% endif %}
 
     {% endblock content %}
 </div>

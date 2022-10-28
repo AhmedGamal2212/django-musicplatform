@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'artists.apps.ArtistsConfig',
     'albums.apps.AlbumsConfig',
-    'bootstrap5'
+    'bootstrap5',
+    'imagekit'
 ]
 
 MIDDLEWARE = [
@@ -120,9 +121,17 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+    '/var/www/static/',
+]
+
+MEDIA_URL = 'media/'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/artists/'
+MEDIA_ROOT = BASE_DIR / 'media'
