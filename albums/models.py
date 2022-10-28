@@ -4,7 +4,7 @@ from model_utils.models import TimeStampedModel
 from artists.models import Artist
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
-from validators import validate_audio
+from albums.validators import validators
 
 
 # Create your models here.
@@ -26,7 +26,7 @@ class Song(models.Model):
     image = models.ImageField(upload_to='song-images')
     thumbnail = ImageSpecField(source='image', processors=[ResizeToFill(100, 50)], format='JPEG',
                                options={'quality': 60})
-    audio_file = models.FileField(upload_to='music', validators=[validate_audio])
+    audio_file = models.FileField(upload_to='music', validators=[validators.validate_audio])
 
     def __str__(self):
         return self.name
