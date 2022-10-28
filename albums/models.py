@@ -22,7 +22,7 @@ class Album(TimeStampedModel):
 class Song(models.Model):
     album = models.ForeignKey(Album, on_delete=models.CASCADE)
     name = models.SlugField(default=None, blank=True)
-    image = models.ImageField(upload_to='song-images', blank=True)
+    image = models.ImageField(upload_to='song-images')
     thumbnail = ImageSpecField(source='image', processors=[ResizeToFill(100, 50)], format='JPEG',
                                options={'quality': 60})
 
