@@ -16,6 +16,7 @@ pillow = "^9.2.0"
 djangorestframework = "^3.14.0"
 markdown = "^3.4.1"
 django-filter = "^22.1"
+django-rest-knox = "^4.2.0"
 
 
 [build-system]
