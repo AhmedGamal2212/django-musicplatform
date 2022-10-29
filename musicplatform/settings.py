@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'knox',
     'users',
-    'django-extensions'
+    'django_extensions'
 ]
 
 MIDDLEWARE = [
@@ -134,3 +134,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/artists/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}
