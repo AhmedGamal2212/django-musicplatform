@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'imagekit',
     'rest_framework',
     'knox',
-    'users'
+    'users',
+    'django-extensions'
 ]
 
 MIDDLEWARE = [
