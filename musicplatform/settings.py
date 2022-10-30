@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'knox',
     'users',
-    'django_extensions'
+    'django_extensions',
+    'authentication'
 ]
 
 MIDDLEWARE = [
@@ -141,8 +142,10 @@ GRAPH_MODELS = {
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ],
     'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
 }
+
+AUTH_USER_MODEL = 'users.CustomUser'
