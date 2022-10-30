@@ -1,12 +1,7 @@
-from django.http import Http404
-from rest_framework import generics
-from rest_framework.authtoken.serializers import AuthTokenSerializer
-from knox.auth import AuthToken
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import CustomUser
 from .serializers import UserSerializer
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
 
