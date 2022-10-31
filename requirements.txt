@@ -24,6 +24,7 @@ pycparser==2.21
 pydot==1.4.2
 pyparsing==3.0.9
 pytest==7.2.0
+pytest-django==4.5.2
 pytz==2022.5
 six==1.16.0
 soupsieve==2.3.2.post1
