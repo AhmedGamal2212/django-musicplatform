@@ -35,3 +35,14 @@ def test_create_artist_unauthorized():
     })
     assert response.status_code == 401
 
+
+@pytest.mark.django_db
+def test_create_artist_authorized(auth_client):
+    client = auth_client()
+    response = client.post('/artists/', {
+        'stage_name': 'ahmed gamal',
+        'social_link': 'https://google.com'
+    })
+    assert response.status_code == 201
+    assert response.data['stage_name'] == 'ahmed gamal'
+    assert response.data['social_link'] == 'https://google.com'
