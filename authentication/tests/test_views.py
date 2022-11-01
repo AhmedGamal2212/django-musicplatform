@@ -152,3 +152,12 @@ def test_register_with_all_is_ok():
 
 # testing login
 
+@pytest.mark.django_db
+def test_login_with_invalid_credentials():
+    client = APIClient()
+    response = client.post('/authentication/login/', {
+        'username': 'gemmy',
+        'password': 'anything'
+    })
+    assert response.status_code == 400
+
