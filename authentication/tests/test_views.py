@@ -3,6 +3,8 @@ import pytest
 from rest_framework.test import APIClient
 
 
+# testing register
+
 @pytest.mark.django_db
 def test_register_with_invalid_username():
     client = APIClient()
@@ -39,7 +41,13 @@ def test_register_without_optional_field():
         'password2': 'Ahmed2212@',
         'bio': ''
     })
+    user_data = response.data['user']
     assert response.status_code == 200
+    assert user_data['username'] == 'gemmyintesting'
+    assert user_data['email'] == 'gemmytesting@testing.com'
+    assert user_data['bio'] == ''
+    assert 'password' not in user_data and 'password1' not in user_data and 'password2' not in user_data
+    assert 'token' in response.data
 
 
 @pytest.mark.django_db
@@ -133,4 +141,14 @@ def test_register_with_all_is_ok():
         'password2': 'Ahmed2212@',
         'bio': 'anything'
     })
+    user_data = response.data['user']
     assert response.status_code == 200
+    assert user_data['username'] == 'gemmy'
+    assert user_data['email'] == 'gemmytesting@testing.com'
+    assert user_data['bio'] == 'anything'
+    assert 'password' not in user_data and 'password1' not in user_data and 'password2' not in user_data
+    assert 'token' in response.data
+
+
+# testing login
+
