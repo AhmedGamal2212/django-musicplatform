@@ -202,3 +202,10 @@ def testing_logout_with_already_logged_in_user():
     client.credentials(HTTP_AUTHORIZATION=token)
     response = client.post('/authentication/logout/', {})
     assert response.status_code == 204
+
+
+@pytest.mark.django_db
+def test_logout_with_logged_out_user():
+    client = APIClient()
+    response = client.post('/authentication/logout/', {})
+    assert response.status_code == 401
