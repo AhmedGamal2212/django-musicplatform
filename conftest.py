@@ -11,17 +11,20 @@ testing_user = {
 
 
 @pytest.fixture
-def auth_client(user=None):
-    client = APIClient()
-    if user is None:
-        user = CustomUser.objects.create_user(
-            username=testing_user['username'],
-            email=testing_user['email'],
-            password=testing_user['password'],
-        )
+def auth_client():
+    def get_client(user=None):
+        client = APIClient()
+        if user is None:
+            user = CustomUser.objects.create_user(
+                username=testing_user['username'],
+                email=testing_user['email'],
+                password=testing_user['password'],
+            )
 
-    _, token = AuthToken.objects.create(user)
-    token = 'Token ' + token
-    client.credentials(HTTP_AUTHORIZATION=token)
+        _, token = AuthToken.objects.create(user)
+        token = 'Token ' + token
+        client.credentials(HTTP_AUTHORIZATION=token)
 
-    return client
+        return client
+
+    return get_client

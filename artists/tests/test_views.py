@@ -3,9 +3,7 @@ from rest_framework.test import APIClient
 from artists.models import Artist
 
 
-@pytest.mark.django_db
-def test_get_users_unauthorized():
-    client = APIClient()
+def perform_get(client):
     artist = Artist.objects.create(
         stage_name='testing from pytest',
         social_link='https://google.com'
@@ -17,5 +15,13 @@ def test_get_users_unauthorized():
     assert response.data[0]['id'] == artist.id
 
 
+@pytest.mark.django_db
+def test_get_users_unauthorized():
+    client = APIClient()
+    perform_get(client)
+
+
+@pytest.mark.django_db
 def test_get_users_authorized(auth_client):
     client = auth_client()
+    perform_get(client)
