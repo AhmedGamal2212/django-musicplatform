@@ -20,7 +20,7 @@ class LoginAPI(generics.GenericAPIView):
                 'id': user.id,
                 'username': user.username,
                 'email': user.email,
-                'bio': user.bio,
+                'bio': user.get('bio', ''),
             },
         })
 
