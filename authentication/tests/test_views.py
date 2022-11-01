@@ -1,3 +1,4 @@
+import django.db.utils
 import pytest
 from rest_framework.test import APIClient
 
@@ -106,3 +107,17 @@ def test_register_with_weak_password():
         'bio': 'anything'
     })
     assert response.status_code == 400
+
+
+@pytest.mark.django_db
+def test_register_with_entirely_missing_field():
+    client = APIClient()
+    with pytest.raises(django.db.utils.IntegrityError):
+        response = client.post('/authentication/register/', {
+            'username': 'gemmy',
+            'email': 'gemmytesting@testing.com',
+            'password1': 'Ahmed2212@',
+            'password2': 'Ahmed2212@',
+            # bio is missing
+        })
+        assert response.status_code == 500
