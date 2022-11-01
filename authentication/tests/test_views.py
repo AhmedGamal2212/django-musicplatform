@@ -104,6 +104,7 @@ def test_register_with_existing_email():
     })
     assert response.status_code == 400
 
+
 @pytest.mark.django_db
 def test_register_with_weak_password():
     client = APIClient()
@@ -206,6 +207,29 @@ def testing_logout_with_already_logged_in_user():
 
 @pytest.mark.django_db
 def test_logout_with_logged_out_user():
+    client = APIClient()
+    response = client.post('/authentication/logout/', {})
+    assert response.status_code == 401
+
+
+@pytest.mark.django_db
+def testing_logout_all_with_already_logged_in_user():
+    client = APIClient()
+    token = client.post('/authentication/register/', {
+        'username': 'gemmy',
+        'email': 'testing@testing.com',
+        'password1': 'Testing123*',
+        'password2': 'Testing123*',
+        'bio': ''
+    }).data['token']
+    token = 'Token ' + token
+    client.credentials(HTTP_AUTHORIZATION=token)
+    response = client.post('/authentication/logout/', {})
+    assert response.status_code == 204
+
+
+@pytest.mark.django_db
+def test_logout_all_with_logged_out_user():
     client = APIClient()
     response = client.post('/authentication/logout/', {})
     assert response.status_code == 401
