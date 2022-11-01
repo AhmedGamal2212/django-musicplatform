@@ -11,8 +11,8 @@ def test_register_with_invalid_username():
     response = client.post('/authentication/register/', {
         'username': 'gemmy in testing',
         'email': 'gemmytesting@testing.com',
-        'password1': 'Ahmed2212@',
-        'password2': 'Ahmed2212@',
+        'password1': 'Testing123*',
+        'password2': 'Testing123*',
         'bio': 'anything'
     })
     assert response.status_code == 400
@@ -24,8 +24,8 @@ def test_register_without_a_required_field():
     response = client.post('/authentication/register/', {
         'username': '',
         'email': 'gemmytesting@testing.com',
-        'password1': 'Ahmed2212@',
-        'password2': 'Ahmed2212@',
+        'password1': 'Testing123*',
+        'password2': 'Testing123*',
         'bio': 'anything'
     })
     assert response.status_code == 400
@@ -37,8 +37,8 @@ def test_register_without_optional_field():
     response = client.post('/authentication/register/', {
         'username': 'gemmyintesting',
         'email': 'gemmytesting@testing.com',
-        'password1': 'Ahmed2212@',
-        'password2': 'Ahmed2212@',
+        'password1': 'Testing123*',
+        'password2': 'Testing123*',
         'bio': ''
     })
     user_data = response.data['user']
@@ -56,8 +56,8 @@ def test_register_with_passwords_dont_match():
     response = client.post('/authentication/register/', {
         'username': 'gemmy',
         'email': 'gemmytesting@testing.com',
-        'password1': 'Ahmed2212@',
-        'password2': 'Ahmed2212',
+        'password1': 'Testing123*',
+        'password2': 'Testing123',
         'bio': 'anything'
     })
     assert response.status_code == 400
@@ -69,16 +69,16 @@ def test_register_with_existing_username():
     client.post('/authentication/register/', {
         'username': 'gemmy',
         'email': 'gemmytesting@testing.com',
-        'password1': 'Ahmed2212@',
-        'password2': 'Ahmed2212@',
+        'password1': 'Testing123*',
+        'password2': 'Testing123*',
         'bio': 'anything'
     })
 
     response = client.post('/authentication/register/', {
         'username': 'gemmy',
         'email': 'anothermail@testing.com',
-        'password1': 'Ahmed2212@',
-        'password2': 'Ahmed2212@',
+        'password1': 'Testing123*',
+        'password2': 'Testing123*',
         'bio': 'anything'
     })
 
@@ -91,15 +91,15 @@ def test_register_with_existing_email():
     client.post('/authentication/register/', {
         'username': 'gemmy',
         'email': 'gemmytesting@testing.com',
-        'password1': 'Ahmed2212@',
-        'password2': 'Ahmed2212@',
+        'password1': 'Testing123*',
+        'password2': 'Testing123*',
         'bio': 'anything'
     })
     response = client.post('/authentication/register/', {
         'username': 'another_username',
         'email': 'gemmytesting@testing.com',
-        'password1': 'Ahmed2212@',
-        'password2': 'Ahmed2212@',
+        'password1': 'Testing123*',
+        'password2': 'Testing123*',
         'bio': 'anything'
     })
     assert response.status_code == 400
@@ -124,8 +124,8 @@ def test_register_with_entirely_missing_field():
         response = client.post('/authentication/register/', {
             'username': 'gemmy',
             'email': 'gemmytesting@testing.com',
-            'password1': 'Ahmed2212@',
-            'password2': 'Ahmed2212@',
+            'password1': 'Testing123*',
+            'password2': 'Testing123*',
             # bio is missing
         })
         assert response.status_code == 500
@@ -137,8 +137,8 @@ def test_register_with_all_is_ok():
     response = client.post('/authentication/register/', {
         'username': 'gemmy',
         'email': 'gemmytesting@testing.com',
-        'password1': 'Ahmed2212@',
-        'password2': 'Ahmed2212@',
+        'password1': 'Testing123*',
+        'password2': 'Testing123*',
         'bio': 'anything'
     })
     user_data = response.data['user']
@@ -168,8 +168,8 @@ def test_login_with_all_is_ok():
     response = client.post('/authentication/register/', {
         'username': 'gemmy',
         'email': 'testing@testing.com',
-        'password1': 'Ahmed2212@',
-        'password2': 'Ahmed2212@',
+        'password1': 'Testing123*',
+        'password2': 'Testing123*',
         'bio': 'anything'
     })
     token = response.data['token']
@@ -177,7 +177,7 @@ def test_login_with_all_is_ok():
     client.credentials(HTTP_AUTHORIZATION=token)
     response = client.post('/authentication/login/', {
         'username': 'gemmy',
-        'password': 'Ahmed2212@'
+        'password': 'Testing123*'
     })
     user_data = response.data['user']
     assert response.status_code == 200
@@ -186,3 +186,19 @@ def test_login_with_all_is_ok():
     assert user_data['bio'] == 'anything'
     assert 'password' not in user_data
     assert 'token' in response.data
+
+
+@pytest.mark.django_db
+def testing_logout_with_already_logged_in_user():
+    client = APIClient()
+    token = client.post('/authentication/register/', {
+        'username': 'gemmy',
+        'email': 'testing@testing.com',
+        'password1': 'Testing123*',
+        'password2': 'Testing123*',
+        'bio': ''
+    }).data['token']
+    token = 'Token ' + token
+    client.credentials(HTTP_AUTHORIZATION=token)
+    response = client.post('/authentication/logout/', {})
+    assert response.status_code == 204
