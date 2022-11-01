@@ -161,3 +161,28 @@ def test_login_with_invalid_credentials():
     })
     assert response.status_code == 400
 
+
+@pytest.mark.django_db
+def test_login_with_all_is_ok():
+    client = APIClient()
+    response = client.post('/authentication/register/', {
+        'username': 'gemmy',
+        'email': 'testing@testing.com',
+        'password1': 'Ahmed2212@',
+        'password2': 'Ahmed2212@',
+        'bio': 'anything'
+    })
+    token = response.data['token']
+    token = 'Token ' + token
+    client.credentials(HTTP_AUTHORIZATION=token)
+    response = client.post('/authentication/login/', {
+        'username': 'gemmy',
+        'password': 'Ahmed2212@'
+    })
+    user_data = response.data['user']
+    assert response.status_code == 200
+    assert user_data['username'] == 'gemmy'
+    assert user_data['email'] == 'testing@testing.com'
+    assert user_data['bio'] == 'anything'
+    assert 'password' not in user_data
+    assert 'token' in response.data
