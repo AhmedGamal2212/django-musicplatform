@@ -76,3 +76,24 @@ def test_register_with_existing_username():
     assert response.status_code == 400
 
 
+@pytest.mark.django_db
+def test_register_with_existing_email():
+    client = APIClient()
+    client.post('/authentication/register/', {
+        'username': 'gemmy',
+        'email': 'gemmytesting@testing.com',
+        'password1': 'Ahmed2212@',
+        'password2': 'Ahmed2212@',
+        'bio': 'anything'
+    })
+    response = client.post('/authentication/register/', {
+        'username': 'another_username',
+        'email': 'gemmytesting@testing.com',
+        'password1': 'Ahmed2212@',
+        'password2': 'Ahmed2212@',
+        'bio': 'anything'
+    })
+    assert response.status_code == 400
+
+# @pytest.mark.django_db
+# def test_register_with_weak_password
