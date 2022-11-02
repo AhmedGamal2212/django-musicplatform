@@ -4,9 +4,10 @@ from users.models import CustomUser
 from knox.auth import AuthToken
 
 testing_user = {
-    'username': 'testing user',
-    'email': 'testinguser@testing.com',
-    'password': 'testing123'
+    'username': 'testing_random_user',
+    'email': 'testingrandomuser@testing.com',
+    'password': 'Testing123*',
+    'bio': 'bio'
 }
 
 
@@ -19,6 +20,7 @@ def auth_client():
                 username=testing_user['username'],
                 email=testing_user['email'],
                 password=testing_user['password'],
+                bio=testing_user['bio']
             )
 
         _, token = AuthToken.objects.create(user)

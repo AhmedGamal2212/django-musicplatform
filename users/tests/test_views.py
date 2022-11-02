@@ -1,5 +1,7 @@
 import pytest
 from rest_framework.test import APIClient
+from users.models import CustomUser
+
 
 # testing users list view
 
@@ -72,3 +74,24 @@ def test_put_unauthenticated():
     })
 
     assert response.status_code == 401
+
+
+@pytest.mark.django_db
+def test_put_authenticated_update_another_user(auth_client):
+    user = {
+        'username': 'gemmy',
+        'password1': 'Testing123*',
+        'password2': 'Testing123*',
+        'email': 'testing@testing.com',
+        'bio': 'bio'
+    }
+    client = auth_client()
+    response = client.post('/authentication/register/', user)
+    user_id = response.data['user']['id']
+    response = client.put(f'/users/{user_id}/', {
+        'username': 'another_name',
+        'email': 'another_mail@mail.com',
+        'bio': 'another bio'
+    })
+
+    assert response.status_code == 403

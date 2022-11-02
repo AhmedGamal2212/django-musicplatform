@@ -38,6 +38,7 @@ class RegisterAPI(generics.GenericAPIView):
         return Response({
             'token': token,
             'user': {
+                'id': user.id,
                 'username': user.username,
                 'email': user.email,
                 'bio': user.bio
