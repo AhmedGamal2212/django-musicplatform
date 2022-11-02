@@ -169,3 +169,22 @@ def test_patch_authenticated_partial_update_another_user(auth_client):
         'email': 'anothermail@mail.com'
     })
     assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_patch_authenticated_partial_update_with_all_is_ok(auth_client):
+    user = {
+        'username': 'gemmy',
+        'password': 'Testing123*',
+        'email': 'testing@testing.com',
+        'bio': 'bio'
+    }
+    client = auth_client(user)
+    response = client.patch(f'/users/{1}/', {
+        'email': 'anothermail@mail.com'
+    })
+    data = response.data
+    assert response.status_code == 200
+    assert data['username'] == 'gemmy'
+    assert data['bio'] == 'bio'
+    assert data['email'] == 'anothermail@mail.com'
