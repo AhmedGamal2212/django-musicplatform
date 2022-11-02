@@ -49,3 +49,26 @@ def test_get_user_unauthenticated():
     assert first_data['user']['username'] == second_data['username']
     assert first_data['user']['email'] == second_data['email']
     assert first_data['user']['bio'] == second_data['bio']
+
+
+# testing put method
+
+@pytest.mark.django_db
+def test_put_unauthenticated():
+    client = APIClient()
+    response = client.post('/authentication/register/', {
+        'username': 'name',
+        'email': 'mail@mail.com',
+        'bio': 'bio',
+        'password1': 'Testing123*',
+        'password2': 'Testing123*'
+    })
+    assert response.status_code == 200
+
+    response = client.put('/users/1/', {
+        'username': 'another_name',
+        'email': 'another_mail@mail.com',
+        'bio': 'another bio'
+    })
+
+    assert response.status_code == 401
