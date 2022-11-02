@@ -31,3 +31,21 @@ def test_list_view():
     assert user['email'] == 'testing@testing.com'
     assert 'password' not in response.data[0]
     assert user['bio'] == 'bio'
+
+
+@pytest.mark.django_db
+def test_get_user_unauthenticated():
+    client = APIClient()
+    first_response = client.post('/authentication/register/', {
+        'username': 'gemmy',
+        'email': 'testing@testing.com',
+        'password1': 'Testing123*',
+        'password2': 'Testing123*',
+        'bio': 'bio'
+    })
+    second_response = client.get('/users/1/')
+    first_data, second_data = first_response.data, second_response.data
+    assert first_response.status_code == 200 and second_response.status_code == 200
+    assert first_data['user']['username'] == second_data['username']
+    assert first_data['user']['email'] == second_data['email']
+    assert first_data['user']['bio'] == second_data['bio']
