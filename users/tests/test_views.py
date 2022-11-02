@@ -95,3 +95,77 @@ def test_put_authenticated_update_another_user(auth_client):
     })
 
     assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_put_authenticated_update_with_a_missing_field(auth_client):
+    user = {
+        'username': 'gemmy',
+        'password': 'Testing123*',
+        'email': 'testing@testing.com',
+        'bio': 'bio'
+    }
+    client = auth_client(user)
+    response = client.put(f'/users/{1}/', {
+        # username is missing
+        'email': 'another_mail@mail.com',
+        'bio': 'another bio'
+    })
+
+    assert response.status_code == 400
+
+
+@pytest.mark.django_db
+def test_put_authenticated_update_with_all_is_ok(auth_client):
+    user = {
+        'username': 'gemmy',
+        'password': 'Testing123*',
+        'email': 'testing@testing.com',
+        'bio': 'bio'
+    }
+    client = auth_client(user)
+    response = client.put(f'/users/{1}/', {
+        'username': 'another_username',
+        'email': 'another_mail@mail.com',
+        'bio': 'another bio'
+    })
+    data = response.data
+    assert response.status_code == 200
+    assert data['username'] == 'another_username'
+    assert data['email'] == 'another_mail@mail.com'
+    assert data['bio'] == 'another bio'
+
+
+@pytest.mark.django_db
+def test_patch_unauthenticated():
+    client = APIClient()
+    user = {
+        'username': 'gemmy',
+        'password1': 'Testing123*',
+        'password2': 'Testing123*',
+        'email': 'testing@testing.com',
+        'bio': 'bio'
+    }
+    client.post('/authentication/register/', user)
+    response = client.patch('/users/1/', {
+        'email': 'anothermail@mail.com'
+    })
+    assert response.status_code == 401
+
+
+@pytest.mark.django_db
+def test_patch_authenticated_partial_update_another_user(auth_client):
+    client = auth_client()
+    user = {
+        'username': 'gemmy',
+        'password1': 'Testing123*',
+        'password2': 'Testing123*',
+        'email': 'testing@testing.com',
+        'bio': 'bio'
+    }
+    response = client.post('/authentication/register/', user)
+    user_id = response.data['user']['id']
+    response = client.patch(f'/users/{user_id}/', {
+        'email': 'anothermail@mail.com'
+    })
+    assert response.status_code == 403

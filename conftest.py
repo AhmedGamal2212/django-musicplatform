@@ -22,6 +22,13 @@ def auth_client():
                 password=testing_user['password'],
                 bio=testing_user['bio']
             )
+        else:
+            user = CustomUser.objects.create_user(
+                username=user['username'],
+                email=user['email'],
+                password=user['password'],
+                bio=user['bio']
+            )
 
         _, token = AuthToken.objects.create(user)
         token = 'Token ' + token
