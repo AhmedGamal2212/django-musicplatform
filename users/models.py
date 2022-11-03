@@ -7,6 +7,3 @@ class CustomUser(AbstractUser):
     password1 = models.CharField(max_length=50)
     password2 = models.CharField(max_length=50)
 
-    def is_artist(self):
-        return hasattr(self, 'artist')
-
