@@ -31,6 +31,21 @@ def test_create_artist_unauthenticated():
     })
     assert response.status_code == 401
 
+
+@pytest.mark.django_db
+def test_create_artist_authenticated_with_no_prior_artist(auth_client):
+    client = auth_client()
+    response = client.post('/artists/', {
+        'stage_name': 'Tester',
+        'social_link': 'https://tester.com'
+    })
+    assert response.status_code == 200
+    data = response.data
+    assert 'id' in data
+    assert data['stage_name'] == 'Tester'
+    assert data['social_link'] == 'https://tester.com'
+
+
 # @pytest.mark.django_db
 # def test_anything(auth_client):
 #     client = auth_client()
