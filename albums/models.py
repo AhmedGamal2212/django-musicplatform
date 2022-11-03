@@ -12,8 +12,8 @@ from albums.validators import validators
 class Album(TimeStampedModel):
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, default='New Album')
-    release_date = models.DateTimeField('release date')
-    cost = models.FloatField(blank=True)
+    release_date = models.DateTimeField('release date', blank=True, null=True)
+    cost = models.FloatField(blank=True, null=True)
     is_approved = models.BooleanField(default=False)
 
     def __str__(self):

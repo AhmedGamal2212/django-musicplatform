@@ -136,6 +136,8 @@ def test_put_authenticated_update_with_all_is_ok(auth_client):
     assert data['bio'] == 'another bio'
 
 
+# testing patch
+
 @pytest.mark.django_db
 def test_patch_unauthenticated():
     client = APIClient()
