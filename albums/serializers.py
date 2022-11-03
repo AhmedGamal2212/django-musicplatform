@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers, validators
 from .models import Album
 
 
@@ -15,4 +15,4 @@ class AlbumSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Album
-        fields = ('id', 'artist', 'name', 'release_date', 'cost')
+        fields = ('id', 'artist', 'name', 'release_date', 'cost', 'is_approved')
