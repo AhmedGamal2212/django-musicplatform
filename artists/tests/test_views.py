@@ -22,6 +22,14 @@ def test_get_artists(auth_client):
     assert 'id' in artist
 
 
+@pytest.mark.django_db
+def test_create_artist_unauthenticated():
+    client = APIClient()
+    response = client.post('/artists/', {
+        'stage_name': 'Tester',
+        'social_link': 'https://tester.com'
+    })
+    assert response.status_code == 401
 
 # @pytest.mark.django_db
 # def test_anything(auth_client):
