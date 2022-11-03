@@ -1,11 +1,9 @@
-from django.views.generic import ListView, FormView
-from django.contrib.auth.mixins import LoginRequiredMixin
-
-from .forms import AlbumForm
-from artists.models import Artist
+from rest_framework import viewsets
+from .serializers import AlbumSerializer
+from .models import Album
 
 
 # Create your views here.
-class AlbumList(ListView):
-    model = Artist
-
+class AlbumViewSet(viewsets.ModelViewSet):
+    serializer_class = AlbumSerializer
+    queryset = Album.objects.filter(is_approved=True)

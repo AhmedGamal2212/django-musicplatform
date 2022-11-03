@@ -40,7 +40,6 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         username = validated_data.get('username')
         password_1 = validated_data.get('password1')
-        password_2 = validated_data.get('password2')
         email = validated_data.get('email').lower()
         bio = validated_data.get('bio')
 
