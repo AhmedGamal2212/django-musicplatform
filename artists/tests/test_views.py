@@ -46,6 +46,20 @@ def test_create_artist_authenticated_with_no_prior_artist(auth_client):
     assert data['social_link'] == 'https://tester.com'
 
 
+@pytest.mark.django_db
+def test_create_artist_authenticated_with_prior_artist(auth_client):
+    client = auth_client()
+    client.post('/artists/', {
+        'stage_name': 'Tester',
+        'social_link': 'https://tester.com'
+    })
+    response = client.post('/artists/', {
+        'stage_name': 'Another_Tester',
+        'social_link': 'https://tester.com'
+    })
+
+    assert response.status_code == 403
+
 # @pytest.mark.django_db
 # def test_anything(auth_client):
 #     client = auth_client()
