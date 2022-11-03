@@ -1,10 +1,11 @@
+import django_filters.rest_framework
 from rest_framework import viewsets
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
-
 from .serializers import AlbumSerializer
 from .models import Album
+from .filters import AlbumFilter
 
 
 # Create your views here.
@@ -13,6 +14,8 @@ class AlbumViewSet(viewsets.ModelViewSet):
     queryset = Album.objects.filter(is_approved=True)
     permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = LimitOffsetPagination
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
+    filterset_class = AlbumFilter
 
     def create(self, request, *args, **kwargs):
         if not hasattr(request.user, 'artist'):
