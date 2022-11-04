@@ -48,16 +48,15 @@ class AlbumViewSetManually(viewsets.ModelViewSet):
         cost_lower_bound = request.GET.get('cost__gte', -(1 << 32))
 
         if cost_lower_bound is not None:
-            if any(not(c.isdigit() or c == '-') for c in str(cost_lower_bound)):
-                print(cost_lower_bound)
+            if any(not (c.isdigit() or c == '-') for c in str(cost_lower_bound)):
                 raise ValidationError('Cost queries must be only numbers.')
             cost_lower_bound = float(cost_lower_bound)
 
         if cost_upper_bound is not None:
-            if any(not(c.isdigit() or c == '-') for c in str(cost_upper_bound)):
-                print(cost_upper_bound)
+            if any(not (c.isdigit() or c == '-') for c in str(cost_upper_bound)):
                 raise ValidationError('Cost queries must be only numbers.')
             cost_upper_bound = float(cost_upper_bound)
 
-        filtered = self.get_queryset().filter(name__icontains=name).filter(cost__lte=cost_upper_bound).filter(cost__gte=cost_lower_bound)
+        filtered = self.get_queryset().filter(name__icontains=name).filter(cost__lte=cost_upper_bound).filter(
+            cost__gte=cost_lower_bound)
         return Response(AlbumSerializer(filtered, many=True).data)
