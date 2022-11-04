@@ -36,3 +36,31 @@ def test_serialization():
     assert data['release_date'] is None
     assert data['cost'] == float(album.cost)
     assert data['is_approved']
+
+
+@pytest.mark.django_db
+def test_deserialization():
+    user = CustomUser.objects.create_user(
+        username='Tester',
+        password='Testing128*',
+        email='testing@testing.com',
+        bio='anything'
+    )
+    artist = Artist.objects.create(
+        stage_name='El_Tester',
+        social_link='https://tester.com',
+        user=user
+    )
+    serializer = AlbumSerializer(data={
+        'name': 'testing_album',
+        'cost': '10',
+        'is_approved': 'true'
+    })
+    serializer.is_valid()
+    album = serializer.save(artist=artist)
+
+    assert album.name == 'testing_album'
+    assert album.artist == artist
+    assert album.release_date is None
+    assert album.is_approved is True
+    assert album.cost == 10
