@@ -212,7 +212,7 @@ def test_manual_filtered_list_request_cost__lte(auth_client):
 
 
 @pytest.mark.django_db
-def test_manual_filtered_list_request_cost__lte(auth_client):
+def test_manual_filtered_list_request_cost__gte(auth_client):
     client = auth_client()
     create_an_artist(client)
     create_approved_albums(client)
@@ -223,3 +223,31 @@ def test_manual_filtered_list_request_cost__lte(auth_client):
     assert data['count'] == 21
     for album in data['results']:
         assert album['cost'] >= 10
+
+
+@pytest.mark.django_db
+def test_manual_filtered_list_request_name_icontains(auth_client):
+    client = auth_client()
+    create_an_artist(client)
+    create_approved_albums(client)
+    create_not_approved_albums(client)
+    client.post('/albums/', {
+        'name': 'Ahmed',
+        'is_approved': 'true',
+        'cost': 10
+    })
+    client.post('/albums/', {
+        'name': 'Omar',
+        'is_approved': 'true',
+        'cost': 20
+    })
+    response = client.get('/albums/manual/?name=a&limit=5')
+    # a ahmed omar
+    assert response.status_code == 200
+    data = response.data
+    assert data['count'] == 3
+    names_set = set()
+    for album in data['results']:
+        assert 'a' in album['name'].lower()
+        names_set.add(album['name'].lower())
+    assert names_set == {'ahmed', 'omar', 'a'}
