@@ -251,3 +251,109 @@ def test_manual_filtered_list_request_name_icontains(auth_client):
         assert 'a' in album['name'].lower()
         names_set.add(album['name'].lower())
     assert names_set == {'ahmed', 'omar', 'a'}
+
+
+@pytest.mark.django_db
+def test_viewset_list_request_unauthenticated(auth_client):
+    temp_client = auth_client()
+    create_an_artist(temp_client)
+    create_approved_albums(temp_client)
+    create_not_approved_albums(temp_client)
+    client = APIClient()
+    response = client.get('/albums/?limit=5')
+    data = response.data
+    assert response.status_code == 200
+    assert 'count' in data
+    assert data['count'] == 26
+    for album in data['results']:
+        assert album['is_approved']
+        assert album['artist'] == {
+            'id': 1,
+            'stage_name': 'El_Tester',
+            'social_link': 'https://testing.com'
+        }
+
+
+@pytest.mark.django_db
+def test_viewset_list_request_invalid_limit_datatype(auth_client):
+    client = auth_client()
+    create_an_artist(client)
+    create_approved_albums(client)
+    create_not_approved_albums(client)
+    response = client.get('/albums/?limit=test/')
+    assert 'count' not in response.data
+
+
+@pytest.mark.django_db
+def test_viewset_list_request_invalid_cost__lte__datatype(auth_client):
+    client = auth_client()
+    create_an_artist(client)
+    create_approved_albums(client)
+    create_not_approved_albums(client)
+    response = client.get('/albums/?cost__lte=test')
+    assert response.status_code == 400
+
+
+@pytest.mark.django_db
+def test_viewset_list_request_invalid_cost__gte__datatype(auth_client):
+    client = auth_client()
+    create_an_artist(client)
+    create_approved_albums(client)
+    create_not_approved_albums(client)
+    response = client.get('/albums/?cost__gte=test/')
+    assert response.status_code == 400
+
+
+@pytest.mark.django_db
+def test_viewset_list_request_cost__lte(auth_client):
+    client = auth_client()
+    create_an_artist(client)
+    create_approved_albums(client)
+    create_not_approved_albums(client)
+    response = client.get('/albums/?cost__lte=10&limit=100')
+    assert response.status_code == 200
+    data = response.data
+    assert data['count'] == 5
+    for album in data['results']:
+        assert album['cost'] <= 10.0
+
+
+@pytest.mark.django_db
+def test_viewset_list_request_cost__gte(auth_client):
+    client = auth_client()
+    create_an_artist(client)
+    create_approved_albums(client)
+    create_not_approved_albums(client)
+    response = client.get('/albums/?cost__gte=10&limit=100')
+    assert response.status_code == 200
+    data = response.data
+    assert data['count'] == 21
+    for album in data['results']:
+        assert album['cost'] >= 10
+
+
+@pytest.mark.django_db
+def test_viewset_list_request_name_icontains(auth_client):
+    client = auth_client()
+    create_an_artist(client)
+    create_approved_albums(client)
+    create_not_approved_albums(client)
+    client.post('/albums/', {
+        'name': 'Ahmed',
+        'is_approved': 'true',
+        'cost': 10
+    })
+    client.post('/albums/', {
+        'name': 'Omar',
+        'is_approved': 'true',
+        'cost': 20
+    })
+    response = client.get('/albums/?name__icontains=a')
+    data = response.data
+    assert len(data) == 3
+    assert response.status_code == 200
+    names_set = set()
+    for album in data:
+        assert 'a' in album['name'].lower()
+        names_set.add(album['name'].lower())
+    assert names_set == {'ahmed', 'omar', 'a'}
