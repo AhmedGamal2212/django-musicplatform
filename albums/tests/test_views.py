@@ -14,6 +14,15 @@ def test_album_create_unauthenticated():
     assert response.status_code == 401
 
 
+@pytest.mark.django_db
+def test_album_create_user_is_not_an_artist(auth_client):
+    client = auth_client()
+    response = client.post('/albums/', {
+        'name': 'testing_album',
+        'cost': '100',
+        'is_approved': 'true'
+    })
+    assert response.status_code == 403
 
 # @pytest.mark.django_db
 # def test_manual_filtered_list_request_unauthenticated():
