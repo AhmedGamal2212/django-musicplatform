@@ -1,6 +1,5 @@
 import pytest
 from rest_framework.test import APIClient
-from artists.models import Artist
 
 
 @pytest.mark.django_db
