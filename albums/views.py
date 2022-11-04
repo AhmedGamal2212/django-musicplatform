@@ -24,7 +24,6 @@ class AlbumViewSet(viewsets.ModelViewSet):
             return Response({
                 'details': 'You should be an artist to create an album.'
             }, status=403)
-        print(request.data)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         album_name = request.data['name']

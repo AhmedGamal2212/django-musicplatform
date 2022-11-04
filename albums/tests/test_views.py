@@ -47,6 +47,28 @@ def test_album_create_user_is_an_artist(auth_client):
     assert data['cost'] == float(100)
     assert data['release_date'] is None
 
+
+@pytest.mark.django_db
+def test_album_create_user_is_an_artist(auth_client):
+    client = auth_client()
+    client.post('/artists/', {
+        'stage_name': 'El_Tester',
+        'social_link': 'https://testing.com'
+    })
+    client.post('/albums/', {
+        'name': 'testing_album',
+        'cost': '100',
+        'is_approved': 'true'
+    })
+    response = client.post('/albums/', {
+        'name': 'testing_album',
+        'cost': '100',
+        'is_approved': 'true'
+    })
+    assert response.status_code == 400
+    assert response.data['details'] == 'You already have an album with the same name.'
+
+
 # @pytest.mark.django_db
 # def test_manual_filtered_list_request_unauthenticated():
 #     client = APIClient()
