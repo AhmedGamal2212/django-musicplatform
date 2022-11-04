@@ -1,4 +1,6 @@
 import math
+
+import django.utils.datastructures
 import pytest
 from rest_framework.test import APIClient
 
@@ -69,8 +71,25 @@ def test_album_create_with_duplicated_name(auth_client):
     assert response.data['details'] == 'You already have an album with the same name.'
 
 
-# @pytest.mark.django_db
-# def test_create_album
+@pytest.mark.django_db
+def test_create_album_with_null_field(auth_client):
+    client = auth_client()
+    client.post('/artists/', {
+        'stage_name': 'El_Tester',
+        'social_link': 'https://testing.com'
+    })
+    client.post('/albums/', {
+        'name': 'testing_album',
+        'cost': '100',
+        'is_approved': 'true'
+    })
+    with pytest.raises(django.utils.datastructures.MultiValueDictKeyError):
+        response = client.post('/albums/', {
+            'cost': '100',
+            'is_approved': 'true'
+        })
+        assert response.status_code == 500
+
 
 # @pytest.mark.django_db
 # def test_manual_filtered_list_request_unauthenticated():
