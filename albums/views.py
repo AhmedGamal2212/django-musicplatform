@@ -1,5 +1,3 @@
-import math
-
 import django_filters.rest_framework
 from rest_framework import viewsets
 from rest_framework.exceptions import ValidationError
@@ -9,7 +7,7 @@ from rest_framework.response import Response
 from .serializers import AlbumSerializer
 from .models import Album
 from .filters import AlbumFilter
-
+from .pagination import CustomPagination
 
 # Create your views here.
 class AlbumViewSet(viewsets.ModelViewSet):
@@ -36,27 +34,33 @@ class AlbumViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=200)
 
 
-class AlbumViewSetManually(viewsets.ModelViewSet):
+def check_params(query_param):
+    if any(not (c.isdigit() or c == '-') for c in str(query_param)):
+        raise ValidationError('Cost queries must be only numbers.')
+
+
+class AlbumViewSetManually(viewsets.ReadOnlyModelViewSet):
     serializer_class = AlbumSerializer
     queryset = Album.objects.filter(is_approved=True)
     permission_classes = [IsAuthenticatedOrReadOnly]
-    pagination_class = LimitOffsetPagination
+    pagination_class = CustomPagination
+    paginate_by = 5
 
     def list(self, request, *args, **kwargs):
-        name = request.query_params.get('name', '')
+        name = request.GET.get('name', '')
         cost_upper_bound = request.GET.get('cost__lte', (1 << 32))
         cost_lower_bound = request.GET.get('cost__gte', -(1 << 32))
 
         if cost_lower_bound is not None:
-            if any(not (c.isdigit() or c == '-') for c in str(cost_lower_bound)):
-                raise ValidationError('Cost queries must be only numbers.')
+            check_params(str(cost_lower_bound))
             cost_lower_bound = float(cost_lower_bound)
 
         if cost_upper_bound is not None:
-            if any(not (c.isdigit() or c == '-') for c in str(cost_upper_bound)):
-                raise ValidationError('Cost queries must be only numbers.')
+            check_params(str(cost_upper_bound))
             cost_upper_bound = float(cost_upper_bound)
 
         filtered = self.get_queryset().filter(name__icontains=name).filter(cost__lte=cost_upper_bound).filter(
             cost__gte=cost_lower_bound)
-        return Response(AlbumSerializer(filtered, many=True).data)
+        paginated = self.paginate_queryset(filtered)
+        serialized = self.get_serializer(paginated, many=True).data
+        return self.get_paginated_response(serialized)
