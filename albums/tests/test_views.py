@@ -91,6 +91,27 @@ def test_create_album_with_null_field(auth_client):
         assert response.status_code == 500
 
 
+@pytest.mark.django_db
+def test_album_create_with_no_provided_name(auth_client):
+    client = auth_client()
+    client.post('/artists/', {
+        'stage_name': 'El_Tester',
+        'social_link': 'https://testing.com'
+    })
+    client.post('/albums/', {
+        'name': 'testing_album',
+        'cost': '100',
+        'is_approved': 'true'
+    })
+    response = client.post('/albums/', {
+        'name': '',
+        'cost': '100',
+        'is_approved': 'true'
+    })
+    assert response.status_code == 200
+    data = response.data
+    assert data['name'] == 'New Album'
+
 # @pytest.mark.django_db
 # def test_manual_filtered_list_request_unauthenticated():
 #     client = APIClient()
