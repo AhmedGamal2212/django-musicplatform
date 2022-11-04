@@ -1,8 +1,8 @@
-import math
-
+import string
 import django.utils.datastructures
 import pytest
 from rest_framework.test import APIClient
+from artists.serializers import ArtistSerializer
 
 
 @pytest.mark.django_db
@@ -112,12 +112,53 @@ def test_album_create_with_no_provided_name(auth_client):
     data = response.data
     assert data['name'] == 'New Album'
 
-# @pytest.mark.django_db
-# def test_manual_filtered_list_request_unauthenticated():
-#     client = APIClient()
-#     response = client.get('/albums/manual/')
-#
-#     assert response.status_code == 200
-#     data = response.data
-#     assert 'count' in data
-#     assert data['count'] == math.ceil()
+
+def create_an_artist(client):
+    client.post('/artists/', {
+        'stage_name': 'El_Tester',
+        'social_link': 'https://testing.com'
+    })
+
+
+def create_approved_albums(client):
+    price = 1
+    for c in string.ascii_lowercase:
+        client.post('/albums/', {
+            'name': f'{c}',
+            'is_approved': 'true',
+            'cost': f'{price}'
+        })
+        price += 2
+
+
+def create_not_approved_albums(client):
+    price = 1
+    for c in string.ascii_lowercase:
+        client.post('/albums/', {
+            'name': f'{c}{c}',
+            'is_approved': 'false',
+            'cost': f'{price}'
+        })
+        price += 2
+
+
+@pytest.mark.django_db
+def test_manual_filtered_list_request_unauthenticated(auth_client):
+    temp_client = auth_client()
+    create_an_artist(temp_client)
+    create_approved_albums(temp_client)
+    create_not_approved_albums(temp_client)
+    client = APIClient()
+    response = client.get('/albums/manual/')
+
+    assert response.status_code == 200
+    data = response.data
+    assert 'count' in data
+    assert data['count'] == 26
+    for album in data['results']:
+        assert album['is_approved']
+        assert album['artist'] == {
+            'id': 1,
+            'stage_name': 'El_Tester',
+            'social_link': 'https://testing.com'
+        }
