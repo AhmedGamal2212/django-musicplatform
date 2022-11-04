@@ -208,4 +208,18 @@ def test_manual_filtered_list_request_cost__lte(auth_client):
     data = response.data
     assert data['count'] == 5
     for album in data['results']:
-        assert album['cost'] <= 5.0
+        assert album['cost'] <= 10.0
+
+
+@pytest.mark.django_db
+def test_manual_filtered_list_request_cost__lte(auth_client):
+    client = auth_client()
+    create_an_artist(client)
+    create_approved_albums(client)
+    create_not_approved_albums(client)
+    response = client.get('/albums/manual/?cost__gte=10')
+    assert response.status_code == 200
+    data = response.data
+    assert data['count'] == 21
+    for album in data['results']:
+        assert album['cost'] >= 10
