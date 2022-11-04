@@ -37,7 +37,9 @@ class AlbumViewSet(viewsets.ModelViewSet):
 
 def check_params(query_param):
     if any(not (c.isdigit() or c == '-') for c in str(query_param)):
-        raise ValidationError('Cost and limit queries must be only numbers.')
+        raise ValidationError({
+            'details': 'Cost and limit queries must be only numbers.'
+        })
 
 
 class AlbumViewSetManually(viewsets.ReadOnlyModelViewSet):

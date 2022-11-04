@@ -162,3 +162,16 @@ def test_manual_filtered_list_request_unauthenticated(auth_client):
             'stage_name': 'El_Tester',
             'social_link': 'https://testing.com'
         }
+
+
+@pytest.mark.django_db
+def test_manual_filtered_list_request_invalid_limit_datatype(auth_client):
+    client = auth_client()
+    create_an_artist(client)
+    create_approved_albums(client)
+    create_not_approved_albums(client)
+    response = client.get('/albums/manual/?limit=test/')
+    assert response.status_code == 400
+    assert response.data['details'] == 'Cost and limit queries must be only numbers.'
+
+
