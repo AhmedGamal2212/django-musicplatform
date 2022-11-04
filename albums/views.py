@@ -9,6 +9,7 @@ from .models import Album
 from .filters import AlbumFilter
 from .pagination import CustomPagination
 
+
 # Create your views here.
 class AlbumViewSet(viewsets.ModelViewSet):
     serializer_class = AlbumSerializer
