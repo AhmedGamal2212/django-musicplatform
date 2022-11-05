@@ -24,11 +24,11 @@ def send_congratulations_mail(self, album_name, artist_name):
 
 @shared_task(bind=True)
 def check_for_added_albums(self):
-    all_artists = Artist.objects.add()
+    all_artists = Artist.objects.all()
     not_active = []
     for artist in all_artists:
         if artist.album_set.count():
-            latest_album = artist.album_set.latest('release_date')
+            latest_album = artist.album_set.latest('created')
             if timezone.now() - latest_album.release_date >= timezone.timedelta(days=30):
                 not_active.append(artist)
 

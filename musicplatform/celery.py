@@ -10,11 +10,14 @@ app = Celery('musicplatform')
 app.conf.enable_uts = False
 
 app.conf.update(timezone='Africa/Cairo')
-app.config_from_object(settings, namespace='CELERY')
+app.config_from_object(settings, namespace='CELERY_CONF')
 
 # Celery Beat settings
 app.conf.beat_schedule = {
-
+    'send-inactivity-mail-every-day': {
+        'task': 'albums.tasks.check_for_added_albums',
+        'schedule': crontab(hour=0, minute=0)
+    }
 }
 
 app.autodiscover_tasks()

@@ -156,16 +156,16 @@ AUTH_USER_MODEL = 'users.CustomUser'
 
 # CELERY SETTINGS
 
-CELERY_BROKER_URL = 'redis://localhost:6379'
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'Africa/Cairo'
+CELERY_CONF_BROKER_URL = 'redis://localhost:6379'
+CELERY_CONF_ACCEPT_CONTENT = ['application/json']
+CELERY_CONF_RESULT_SERIALIZER = 'json'
+CELERY_CONF_TASK_SERIALIZER = 'json'
+CELERY_CONF_TIMEZONE = 'Africa/Cairo'
 
-CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CONF_RESULT_BACKEND = 'django-db'
 
 # CELERY BEAT
-CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_CONF_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 
 # aktzebaiwhpummqq
