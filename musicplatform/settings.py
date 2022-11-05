@@ -25,7 +25,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -169,7 +169,6 @@ CELERY_CONF_RESULT_BACKEND = 'django-db'
 # CELERY BEAT
 CELERY_CONF_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
-# aktzebaiwhpummqq
 # SMTP
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
