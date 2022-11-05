@@ -3,6 +3,7 @@ import os
 
 from celery import Celery
 from django.conf import settings
+from celery.schedules import crontab
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'musicplatform.settings')
 app = Celery('musicplatform')
@@ -10,6 +11,12 @@ app.conf.enable_uts = False
 
 app.conf.update(timezone='Africa/Cairo')
 app.config_from_object(settings, namespace='CELERY')
+
+# Celery Beat settings
+app.conf.beat_schedule = {
+
+}
+
 app.autodiscover_tasks()
 
 

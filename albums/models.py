@@ -5,6 +5,7 @@ from artists.models import Artist
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 from albums.validators import validators
+from .tasks import send_congratulations_mail
 
 
 # Create your models here.
@@ -18,6 +19,10 @@ class Album(TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        send_congratulations_mail(self.name, self.artist.stage_name)
+        super(Album, self).save(*args, **kwargs)
 
 
 class Song(models.Model):

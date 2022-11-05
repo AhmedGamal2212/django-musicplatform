@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'authentication',
     'django_filters',
     'django_celery_results',
+    'django_celery_beat'
 ]
 
 MIDDLEWARE = [
@@ -112,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Cairo'
 
 USE_I18N = True
 
@@ -162,3 +163,18 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Cairo'
 
 CELERY_RESULT_BACKEND = 'django-db'
+
+# CELERY BEAT
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+
+# aktzebaiwhpummqq
+# SMTP
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'ahmedgemy2212@gmail.com'
+EMAIL_HOST_PASSWORD = 'aktzebaiwhpummqq'
+DEFAULT_FROM_EMAIL = 'Celery Testing <ahmedgemy2212@gmail.com>'

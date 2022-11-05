@@ -1,4 +1,5 @@
 import django_filters.rest_framework
+from django.http import HttpResponse
 from rest_framework import viewsets
 from rest_framework.exceptions import ValidationError
 from rest_framework.pagination import LimitOffsetPagination
@@ -31,6 +32,7 @@ class AlbumViewSet(viewsets.ModelViewSet):
             return Response({
                 'details': "You already have an album with the same name."
             }, status=400)
+
         serializer.save(artist=request.user.artist)
         return Response(serializer.data, status=200)
 
